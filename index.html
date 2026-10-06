@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فانتسي المزاد - FC Transfer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #05070a;
+            --card-gold-bg: linear-gradient(135deg, #f59e0b 0%, #b45309 50%, #78350f 100%);
+            --card-manager-bg: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --text-main: #ffffff;
+        }
+
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
+        body { background: var(--bg-primary); color: var(--text-main); padding: 20px 10px; min-height: 100vh; }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        /* Branding Header */
+        .brand-header { text-align: center; margin-bottom: 20px; }
+        .brand-title { font-size: 28px; font-weight: 900; color: #fbbf24; text-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
+
+        /* Dashboard Header */
+        .dashboard { 
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid rgba(245, 158, 11, 0.3);
+            border-radius: 20px; padding: 20px;
+            display: flex; justify-content: space-around; align-items: center;
+            margin-bottom: 25px; box-shadow: 0 0 30px rgba(245, 158, 11, 0.15);
+            flex-wrap: wrap; gap: 10px;
+        }
+        .stat-box { text-align: center; }
+        .stat-title { font-size: 13px; color: #94a3b8; font-weight: 700; }
+        .stat-value { font-size: 22px; font-weight: 900; }
+        .val-green { color: var(--accent-green); text-shadow: 0 0 12px rgba(16, 185, 129, 0.5); }
+        .val-gold { color: #fbbf24; text-shadow: 0 0 12px rgba(251, 191, 36, 0.5); }
+        .val-purple { color: #a855f7; text-shadow: 0 0 12px rgba(168, 85, 247, 0.5); }
+
+        /* Leaderboard Section */
+        .leaderboard-card {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 16px; padding: 15px; margin-bottom: 25px;
+        }
+        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .leaderboard-table th, .leaderboard-table td { padding: 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .leaderboard-table th { color: #94a3b8; font-size: 13px; }
+        .rank-badge { font-weight: 900; color: #fbbf24; }
+
+        /* Sections */
+        .section-title { font-size: 20px; font-weight: 900; margin: 25px 0 15px; color: #fff; }
+
+        /* Cards Grid */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+
+        /* FUT Card Styling */
+        .fut-card {
+            background: var(--card-gold-bg);
+            border: 2px solid #fef08a;
+            border-radius: 16px; padding: 12px 8px; text-align: center;
+            position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+            transition: all 0.3s ease; overflow: hidden;
+        }
+        .fut-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(245, 158, 11, 0.4); }
+
+        .card-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 4px; }
+        .card-rating { font-size: 24px; font-weight: 900; color: #fff; }
+        .card-pos { font-size: 12px; font-weight: 900; color: #fef08a; background: rgba(0,0,0,0.3); padding: 2px 5px; border-radius: 4px; }
+        .card-name { font-size: 15px; font-weight: 900; color: #fff; margin: 8px 0 4px; }
+        .card-price { font-size: 13px; color: #22c55e; font-weight: 900; background: rgba(0,0,0,0.5); border-radius: 6px; padding: 3px; margin-bottom: 8px; }
+
+        .manager-card { background: var(--card-manager-bg); border-color: #c084fc; }
+
+        /* Buttons */
+        .btn-buy {
+            width: 100%; border: none; padding: 6px; border-radius: 6px;
+            font-size: 12px; font-weight: 900; background: #0f172a; color: #fff; cursor: pointer;
+        }
+        .btn-buy:hover { background: #22c55e; color: #000; }
+        .btn-buy:disabled { background: rgba(0,0,0,0.5); color: #64748b; cursor: not-allowed; }
+
+        .btn-play {
+            width: 100%; background: linear-gradient(90deg, #10b981, #059669);
+            color: #fff; border: none; padding: 16px; font-size: 18px; font-weight: 900;
+            border-radius: 14px; margin-top: 25px; cursor: pointer;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+        .btn-play:disabled { background: #334155; box-shadow: none; cursor: not-allowed; }
+
+        .ad-space { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); padding: 10px; border-radius: 8px; text-align: center; color: #64748b; font-size: 11px; margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="brand-header">
+        <h1 class="brand-title">⚽ فانتسي المزاد - FC Transfer</h1>
+    </div>
+
+    <!-- Header Stats -->
+    <div class="dashboard">
+        <div class="stat-box">
+            <div class="stat-title">اسم النادي</div>
+            <div class="stat-value" id="team-name" style="font-size: 16px; color: #38bdf8;">-</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-title">الميزانية</div>
+            <div class="stat-value val-green" id="budget">200M $</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-title">قوة التشكيلة</div>
+            <div class="stat-value val-gold" id="squad-power">0</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-title">المدرب</div>
+            <div class="stat-value val-purple" id="manager-name">بدون مدرب</div>
+        </div>
+    </div>
+
+    <!-- Global Leaderboard -->
+    <div class="leaderboard-card">
+        <div class="section-title" style="margin: 0; font-size: 18px;">🏆 لوحة الصدارة العالمية (أثرى الأندية)</div>
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>المركز</th>
+                    <th>اسم الفريق</th>
+                    <th>الميزانية الكلية</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+                <!-- تجديد الترتيب تلقائياً -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- الإعلان للربح -->
+    <div class="ad-space">مساحة إعلانية مخصصة للربح (Monetag / Adsterra Code)</div>
+
+    <!-- Manager Market -->
+    <div class="section-title">👔 سوق المدربين الكبار</div>
+    <div class="cards-grid" id="manager-list"></div>
+
+    <!-- Player Market -->
+    <div class="section-title">🔥 سوق بطاقات اللاعبين</div>
+    <div class="cards-grid" id="player-list"></div>
+
+    <!-- Play Game Button -->
+    <button class="btn-play" id="play-btn" onclick="playMatch()" disabled>⚡ خوض مباراة المحاكاة الفورية ⚡</button>
+</div>
+
+<script>
+    let teamName = localStorage.getItem('fcTeamName');
+    if (!teamName) {
+        teamName = prompt("أدخل اسم فريقك للظهور في لوحة الصدارة العالمية:", "فريق الأسطورة");
+        if (!teamName) teamName = "نادي الخبراء";
+        localStorage.setItem('fcTeamName', teamName);
+    }
+    document.getElementById("team-name").innerText = teamName;
+
+    let budget = localStorage.getItem('fcBudget') ? parseFloat(localStorage.getItem('fcBudget')) : 200;
+    let squad = localStorage.getItem('fcSquad') ? JSON.parse(localStorage.getItem('fcSquad')) : [];
+    let currentManager = localStorage.getItem('fcManager') ? JSON.parse(localStorage.getItem('fcManager')) : null;
+
+    const managers = [
+        { id: 101, name: "كارلو أنشيلوتي", boost: 1.10, price: 50 },
+        { id: 102, name: "بيب جوارديولا", boost: 1.15, price: 85 },
+        { id: 103, name: "يورجن كلوب", boost: 1.20, price: 120 }
+    ];
+
+    const players = [
+        { id: 1, name: "كورتوا", pos: "GK", rating: 90, price: 30 },
+        { id: 2, name: "فان دايك", pos: "CB", rating: 89, price: 28 },
+        { id: 3, name: "حكيمي", pos: "RB", rating: 85, price: 18 },
+        { id: 4, name: "روديجر", pos: "CB", rating: 87, price: 22 },
+        { id: 5, name: "ثيو هيرنانديز", pos: "LB", rating: 86, price: 20 },
+        { id: 6, name: "دي بروين", pos: "CAM", rating: 91, price: 45 },
+        { id: 7, name: "رودري", pos: "CDM", rating: 89, price: 35 },
+        { id: 8, name: "بيلينجهام", pos: "CM", rating: 90, price: 42 },
+        { id: 9, name: "مبابي", pos: "ST", rating: 92, price: 65 },
+        { id: 10, name: "فينيسيوس", pos: "LW", rating: 90, price: 48 },
+        { id: 11, name: "محمد صلاح", pos: "RW", rating: 89, price: 40 }
+    ];
+
+    function save() {
+        localStorage.setItem('fcBudget', budget);
+        localStorage.setItem('fcSquad', JSON.stringify(squad));
+        localStorage.setItem('fcManager', JSON.stringify(currentManager));
+        updateLeaderboard();
+    }
+
+    // محاكاة لوحة الصدارة وحفظ ترتيب اللاعب الحالي
+    function updateLeaderboard() {
+        let globalData = JSON.parse(localStorage.getItem('globalLeaderboard')) || [
+            { name: "الريال الملكي", score: 450 },
+            { name: "أبطال العالم", score: 380 },
+            { name: "كتالونية FC", score: 290 }
+        ];
+
+        // تحديث أو إضافة نتائج اللاعب الحالية
+        let userIndex = globalData.findIndex(item => item.name === teamName);
+        if (userIndex !== -1) {
+            globalData[userIndex].score = Math.round(budget);
+        } else {
+            globalData.push({ name: teamName, score: Math.round(budget) });
+        }
+
+        // ترتيب الأندية من الأثرى للأقل
+        globalData.sort((a, b) => b.score - a.score);
+        localStorage.setItem('globalLeaderboard', JSON.stringify(globalData));
+
+        const body = document.getElementById("leaderboard-body");
+        body.innerHTML = "";
+        globalData.slice(0, 5).forEach((item, idx) => {
+            body.innerHTML += `
+                <tr style="${item.name === teamName ? 'background: rgba(56, 189, 248, 0.15); font-weight: bold;' : ''}">
+                    <td class="rank-badge">#${idx + 1}</td>
+                    <td>${item.name}</td>
+                    <td style="color: #22c55e;">${item.score}M $</td>
+                </tr>
+            `;
+        });
+    }
+
+    function renderManagers() {
+        const list = document.getElementById("manager-list");
+        list.innerHTML = "";
+        managers.forEach(m => {
+            const isHired = currentManager && currentManager.id === m.id;
+            list.innerHTML += `
+                <div class="fut-card manager-card">
+                    <div class="card-top">
+                        <span class="card-rating">+${Math.round((m.boost - 1) * 100)}%</span>
+                        <span class="card-pos">MGR</span>
+                    </div>
+                    <div class="card-name">${m.name}</div>
+                    <div class="card-price">${m.price}M $</div>
+                    <button class="btn-buy" onclick="hireManager(${m.id})" ${isHired ? 'disabled' : ''}>
+                        ${isHired ? 'المدرب الحالي' : 'تعاقد الآن'}
+                    </button>
+                </div>
+            `;
+        });
+    }
+
+    function renderPlayers() {
+        const list = document.getElementById("player-list");
+        list.innerHTML = "";
+        players.forEach(p => {
+            const isBought = squad.some(item => item.id === p.id);
+            list.innerHTML += `
+                <div class="fut-card">
+                    <div class="card-top">
+                        <span class="card-rating">${p.rating}</span>
+                        <span class="card-pos">${p.pos}</span>
+                    </div>
+                    <div class="card-name">${p.name}</div>
+                    <div class="card-price">${p.price}M $</div>
+                    <button class="btn-buy" onclick="buyPlayer(${p.id})" ${isBought ? 'disabled' : ''}>
+                        ${isBought ? 'في التشكيلة' : 'شراء البطاقة'}
+                    </button>
+                </div>
+            `;
+        });
+    }
+
+    function buyPlayer(id) {
+        if(squad.length >= 11) {
+            alert("كتيبتك مكتملة بالكامل (11/11)!");
+            return;
+        }
+        const player = players.find(p => p.id === id);
+        if(budget >= player.price) {
+            budget -= player.price;
+            squad.push(player);
+            save();
+            updateUI();
+        } else {
+            alert("الميزانية غير كافية لصفقة هذا اللاعب!");
+        }
+    }
+
+    function hireManager(id) {
+        const mgr = managers.find(m => m.id === id);
+        if(budget >= mgr.price) {
+            if(currentManager) budget += currentManager.price;
+            budget -= mgr.price;
+            currentManager = mgr;
+            save();
+            updateUI();
+        } else {
+            alert("الميزانية لا تكفي للتعاقد مع هذا المدرب!");
+        }
+    }
+
+    function updateUI() {
+        document.getElementById("budget").innerText = Math.round(budget) + "M $";
+        document.getElementById("manager-name").innerText = currentManager ? currentManager.name : "بدون مدرب";
+
+        let basePower = squad.reduce((sum, p) => sum + p.rating, 0);
+        let totalPower = currentManager ? Math.round(basePower * currentManager.boost) : basePower;
+        
+        document.getElementById("squad-power").innerText = totalPower;
+
+        const playBtn = document.getElementById("play-btn");
+        if(squad.length === 11) {
+            playBtn.disabled = false;
+            playBtn.innerText = `⚡ خوض المباراة (قوة التشكيلة: ${totalPower}) ⚡`;
+        } else {
+            playBtn.disabled = true;
+            playBtn.innerText = `اجمع التشكيلة كاملة للعب (${squad.length}/11)`;
+        }
+
+        renderManagers();
+        renderPlayers();
+        updateLeaderboard();
+    }
+
+    function playMatch() {
+        let basePower = squad.reduce((sum, p) => sum + p.rating, 0);
+        let totalPower = currentManager ? Math.round(basePower * currentManager.boost) : basePower;
+        
+        const reward = Math.floor(Math.random() * 25) + 15;
+        alert(`🎉 انتصار كاسح!\nبفضل التكتيك وقوة فريقك (${totalPower}) فزت بالمباراة!\nالمكافأة المكتسبة: +${reward}M $`);
+        
+        budget += reward;
+        save();
+        updateUI();
+    }
+
+    updateUI();
+</script>
+
+</body>
+              </html>
+              
